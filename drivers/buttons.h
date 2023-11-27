@@ -13,6 +13,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define BUTTONS
 
 #include <stdint.h>
+#include "xparameters.h"
+#include "xil_io.h"
+#include "leds.h"
 
 #define BUTTONS_BTN0_MASK 0x1
 #define BUTTONS_BTN1_MASK 0x2
