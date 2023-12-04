@@ -4,15 +4,19 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/* This struct contains all information about th paddle*/
-typedef struct {
+//initialize paddle
+void paddle_init();
 
-    // paddle center
-    int16_t x_current;
-    int16_t y_current;
+//tack paddle object
+void paddle_tick();
 
- 
+//return the angle the ball should go
+void paddle_get_angle();
 
-} paddle_t;
+//return if ball hit then set to false
+bool paddle_is_hit(); 
+
+// Get the XY location of the paddle
+display_point_t paddle_getXY();
 
 #endif /* PADDLE */
