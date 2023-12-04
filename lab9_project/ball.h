@@ -1,5 +1,9 @@
-#include <stdint.h>
+#ifndef BALL
+#define BALL
+
+#include "display.h"
 #include <stdbool.h>
+#include <stdint.h>
 
 #define BALL_RADIUS 10
 
@@ -9,7 +13,9 @@ void ball_tick();
 
 bool ball_hit_ground();
 
-//add get location
+display_point_t ball_getXY();
 
-//maybe  speed and angle as variable in here if we want to change it from other locations
+// maybe  speed and angle as variable in here if we want to change it from other
+// locations
 
+#endif /*BALL*/
