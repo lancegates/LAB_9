@@ -4,6 +4,7 @@
 #include "interrupts.h"
 #include "intervalTimer.h"
 #include "touchscreen.h"
+#include "buttons.h"
 #include <stdio.h>
 
 #define TOUCHSCREEN_TIMER_PERIOD 10.0E-3
@@ -28,6 +29,7 @@ int main() {
 
   display_init();
   touchscreen_init(TOUCHSCREEN_TIMER_PERIOD);
+  buttons_init();
   gameControl_init();
 
   // Initialize timer interrupts

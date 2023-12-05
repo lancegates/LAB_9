@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define BALL_RADIUS 10
+#define BALL_RADIUS 5
 
 void ball_init();
 
