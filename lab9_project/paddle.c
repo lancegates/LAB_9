@@ -122,4 +122,5 @@ display_point_t paddle_getXY() {
     display_point_t myPoint;
     myPoint.x = currentPosition;
     myPoint.y = LOCATION_Y;
+    return myPoint;
 }

@@ -7,7 +7,7 @@
 
 #define PI 3.14159265
 
-#define BALL_BASE_SPEED (150 * .045)
+#define BALL_BASE_SPEED (50 * .045)
 #define TICKS_TO_WAIT_ON_PADDLE 20
 #define TICKS_TO_WAIT_WHILE_DEAD 500
 #define BALL_COLOR DISPLAY_WHITE
@@ -17,8 +17,8 @@ void drawBall();
 void eraseBall();
 
 // Used to track the current x,y
-uint16_t x_current;
-uint16_t y_current;
+int16_t x_current;
+int16_t y_current;
 
 // Used to track the current speed
 double_t speed;
@@ -132,6 +132,7 @@ void ball_tick() {
       tickCount = 0;
       currentState = on_paddle_st;
       dead = false;
+      angle = PI / 2;
     }
     break;
   }
