@@ -8,7 +8,7 @@
 
 #define BACKGROUND_COLOR DISPLAY_BLACK
 
-#define TOTAL_NUM_TILES 9
+#define TOTAL_NUM_TILES 30
 
 tile_t tile[TOTAL_NUM_TILES];
 tile_t *red_tiles = &(tile[0]);
