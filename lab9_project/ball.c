@@ -3,20 +3,22 @@
 #include "ball.h"
 #include "math.h"
 #include "paddle.h"
+#include "tile.h"
 #include <stdio.h>
 
 #define PI 3.14159265
 
-#define BALL_BASE_SPEED (50 * .045)
+#define BALL_BASE_SPEED (75 * .045)
 #define TICKS_TO_WAIT_ON_PADDLE 20
 #define PADDLE_LENGTH 50
-#define TICKS_TO_WAIT_WHILE_DEAD 500
+#define TICKS_TO_WAIT_WHILE_DEAD 10
 #define BALL_COLOR DISPLAY_WHITE
 #define BACKGROUND_COLOR DISPLAY_BLACK
 
 void drawBall();
 void eraseBall();
-bool checkHitPaddle();
+void tryBounceOffPaddle();
+void tryBounceOffTile();
 
 // Used to track the current x,y
 int16_t x_current;
@@ -43,10 +45,12 @@ typedef enum {
 
 plane_st_t currentState;
 display_point_t paddleLocation;
+uint16_t padEdge;
 
 uint16_t tickCount;
 int16_t x_change;
 int16_t y_change;
+extern tile_t tile[];
 
 void ball_init() { currentState = init_st; }
 
@@ -125,6 +129,9 @@ void ball_tick() {
     else if (angle < 0)
       angle += 2 * PI;
 
+    tryBounceOffPaddle();
+    tryBounceOffTile();
+
     // redrawBall
     drawBall();
     break;
@@ -140,7 +147,11 @@ void ball_tick() {
   }
 }
 
-bool ball_hit_ground() { return dead; }
+bool ball_hit_ground() { 
+  bool temp = dead;
+  dead = false;
+  return temp; 
+  }
 
 void drawBall() {
   display_fillCircle(x_current, y_current, BALL_RADIUS, BALL_COLOR);
@@ -150,13 +161,24 @@ void eraseBall() {
   display_fillCircle(x_current, y_current, BALL_RADIUS, BACKGROUND_COLOR);
 }
 
-bool checkHitPaddle() {
+void tryBounceOffPaddle() {
   paddleLocation = paddle_getXY();
 
+  // first chect to see if ball hit top of paddle
   if (y_current >= paddleLocation.y - BALL_RADIUS) {
-    if (x_current <= paddleLocation.x + PADDLE_LENGTH &&
-        x_current >= paddleLocation.x - PADDLE_LENGTH) {
-      return true;
+    if (x_current < paddleLocation.x + PADDLE_LENGTH / 2 &&
+        x_current > paddleLocation.x - PADDLE_LENGTH / 2) {
+
+      padEdge = paddleLocation.x + PADDLE_LENGTH / 2;
+      angle = PI * ((double)(padEdge - x_current) / (double)PADDLE_LENGTH);
     }
   }
+  // then check to see if ball hit side of paddle
+  else if (y_current > paddleLocation.y) {
+
+  }
+}
+
+void tryBounceOffTile(){
+
 }
