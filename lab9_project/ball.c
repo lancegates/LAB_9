@@ -9,12 +9,14 @@
 
 #define BALL_BASE_SPEED (50 * .045)
 #define TICKS_TO_WAIT_ON_PADDLE 20
+#define PADDLE_LENGTH 50
 #define TICKS_TO_WAIT_WHILE_DEAD 500
 #define BALL_COLOR DISPLAY_WHITE
 #define BACKGROUND_COLOR DISPLAY_BLACK
 
 void drawBall();
 void eraseBall();
+bool checkHitPaddle();
 
 // Used to track the current x,y
 int16_t x_current;
@@ -146,4 +148,15 @@ void drawBall() {
 
 void eraseBall() {
   display_fillCircle(x_current, y_current, BALL_RADIUS, BACKGROUND_COLOR);
+}
+
+bool checkHitPaddle() {
+  paddleLocation = paddle_getXY();
+
+  if (y_current >= paddleLocation.y - BALL_RADIUS) {
+    if (x_current <= paddleLocation.x + PADDLE_LENGTH &&
+        x_current >= paddleLocation.x - PADDLE_LENGTH) {
+      return true;
+    }
+  }
 }
