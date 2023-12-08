@@ -18,11 +18,12 @@ typedef struct {
 
   uint16_t y_position;
 
-  bool destroy_me;
+  bool is_dead;
 
 } tile_t;
 
 void editNumTiles(uint16_t num);
+
 
 void tile_init_red(tile_t *tile, uint16_t x);
 
@@ -34,6 +35,9 @@ void tile_init_blue(tile_t *tile, uint16_t x);
 
 
 bool tile_is_dead(tile_t *tile);
+
+
+void tile_tick(tile_t *tile);
 
 
 #endif /* TILE */

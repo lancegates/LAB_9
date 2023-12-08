@@ -3,7 +3,7 @@
 #include "display.h"
 #include "paddle.h"
 
-//number of tiles per row
+// number of tiles per row
 uint16_t numTiles;
 
 // There are 3 pixel gaps between the tile sets
@@ -11,19 +11,17 @@ uint16_t numTiles;
 #define GREEN_Y 18
 #define BLUE_Y 36
 
-//determine tile length based on the number of tiles
-#define TILE_LENGTH 320/numTiles
-//all tiles are 15 pixels tall
+// determine tile length based on the number of tiles
+#define TILE_LENGTH 320 / numTiles
+// all tiles are 15 pixels tall
 #define TILE_WIDTH 15
-//gap between tile side edges
+// gap between tile side edges
 #define TILE_GAP 3
 
-//function to edit num tiles from TOTAL_NUM_TILES in gameControl
-void editNumTiles(uint16_t num) {
-  numTiles = num;
-}
+// function to edit num tiles from TOTAL_NUM_TILES in gameControl
+void editNumTiles(uint16_t num) { numTiles = num; }
 
-//Draws tiles given 0 (red), 1 (green), 2 (blue)
+// Draws tiles given 0 (red), 1 (green), 2 (blue)
 void drawTile(uint8_t tileType, uint16_t tilePosition) {
   // If drawing red (0)...
   if (tileType == 0) {
@@ -81,4 +79,7 @@ void tile_init_blue(tile_t *tile, uint16_t x) {
   drawTile(2, x);
 }
 
-bool tile_is_dead(tile_t *tile);
+bool tile_is_dead(tile_t *tile) { return tile->is_dead; }
+
+// draw tile (3)
+void eraseTile(tile_t *tile) {}
