@@ -88,7 +88,7 @@ void paddle_tick() {
     break;
   
   case STOP:
-    
+    drawPaddle();
     break;
 
   case GO_RIGHT:
