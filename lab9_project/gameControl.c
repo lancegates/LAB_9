@@ -8,20 +8,23 @@
 #include <stdio.h>
 
 #define BACKGROUND_COLOR DISPLAY_BLACK
-tile_t tile[TOTAL_NUM_TILES];
 
 //menu variables
 #define MENU_WAIT_TIME 5/45.0E-3
-uint32_t menuCount;
+static uint32_t menuCount;
 
-uint8_t gameLives = 3;
-uint8_t previousGameLives;
-uint8_t gamePoints = 0;
-uint8_t previousGamePoints;
+static gameTiles_t gameTiles;
 
-tile_t *red_tiles = &(tile[0]);
-tile_t *green_tile = &(tile[TOTAL_NUM_TILES / 3]);
-tile_t *blue_tile = &(tile[TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3)]);
+static uint8_t gameLives = 3;
+static uint8_t previousGameLives;
+static uint8_t gamePoints = 0;
+static uint8_t previousGamePoints;
+
+static tile_t *red_tiles = &(gameTiles.tile[0]);
+static tile_t *green_tile = &(gameTiles.tile[TOTAL_NUM_TILES / 3]);
+static tile_t *blue_tile = &(gameTiles.tile[TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3)]);
+
+
 
 // Game states
 enum state_control_t { INIT, MENU, GAME_ON, GAME_OVER };
@@ -104,8 +107,9 @@ void gameControl_init() {
   display_setCursor(315, 230);
   display_printlnDecimalInt(gamePoints);
 
+
   // init ball
-  ball_init(&tile);
+  ball_init(&gameTiles);
   // init paddle
   paddle_init();
 
@@ -114,17 +118,17 @@ void gameControl_init() {
 
   // fill red tile objects
   for (uint16_t i = 0; i < (TOTAL_NUM_TILES / 3); i++) {
-    tile_init_red(&tile[i], i);
+    tile_init_red(&gameTiles.tile[i], i);
   }
 
   // fill green tile objects
   for (uint16_t i = 0; i < (TOTAL_NUM_TILES / 3); i++) {
-    tile_init_green(&tile[i + (TOTAL_NUM_TILES / 3)], i);
+    tile_init_green(&gameTiles.tile[i + (TOTAL_NUM_TILES / 3)], i);
   }
 
   // fill blue tile objects
   for (uint16_t i = 0; i < (TOTAL_NUM_TILES / 3); i++) {
-    tile_init_blue(&tile[i + (TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3))], i);
+    tile_init_blue(&gameTiles.tile[i + (TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3))], i);
   }
 }
 
