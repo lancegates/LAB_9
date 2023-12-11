@@ -48,7 +48,7 @@ void tile_init_red(tile_t *tile, uint16_t x) {
   tile->type = TILE_TYPE_RED;
 
   // set x,y origin starting spot
-  tile->x_position = x;
+  tile->x_position = x*(TILE_LENGTH + TILE_GAP);
   tile->y_position = RED_Y;
 
   // draw the tile
@@ -60,7 +60,7 @@ void tile_init_green(tile_t *tile, uint16_t x) {
   tile->type = TILE_TYPE_GREEN;
 
   // set x,y origin starting spot
-  tile->x_position = x;
+  tile->x_position = x*(TILE_LENGTH + TILE_GAP);
   tile->y_position = GREEN_Y;
 
   // draw the tile
@@ -72,7 +72,7 @@ void tile_init_blue(tile_t *tile, uint16_t x) {
   tile->type = TILE_TYPE_BLUE;
 
   // set x,y origin starting spot
-  tile->x_position = x;
+  tile->x_position = x*(TILE_LENGTH + TILE_GAP);
   tile->y_position = BLUE_Y;
 
   // draw the tile

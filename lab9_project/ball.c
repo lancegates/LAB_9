@@ -1,6 +1,7 @@
 
 
 #include "ball.h"
+#include "gameControl.h"
 #include "math.h"
 #include "paddle.h"
 #include "tile.h"
@@ -14,6 +15,9 @@
 #define TICKS_TO_WAIT_WHILE_DEAD 10
 #define BALL_COLOR DISPLAY_WHITE
 #define BACKGROUND_COLOR DISPLAY_BLACK
+
+#define TILE_WIDTH 32
+#define TILE_HIEGHT 15
 
 void drawBall();
 void eraseBall();
@@ -30,7 +34,6 @@ double_t speed;
 // Used to track the current angle (0deg being straight right)
 double_t angle;
 double_t prevAngle; // used to reduce math calculations
-
 // used to tell when ball hits the ground
 bool dead;
 
@@ -51,8 +54,12 @@ uint16_t tickCount;
 int16_t x_change;
 int16_t y_change;
 
+gameTiles_t *gameTiles;
 
-void ball_init(tile_t *tile) { currentState = init_st; }
+void ball_init(gameTiles_t *initTile) {
+  currentState = init_st;
+  gameTiles = initTile;
+}
 
 void ball_tick() {
   switch (currentState) {
@@ -178,4 +185,28 @@ void tryBounceOffPaddle() {
   }
 }
 
-void tryBounceOffTile() {}
+void tryBounceOffTile() {
+  // loop through all tiles
+  for (uint16_t i = 0; i < TOTAL_NUM_TILES; i++) {
+    
+    // check to see if ball has a chance of hitting the tile
+    if (y_current <=
+        gameTiles->tile[i].y_position + TILE_HIEGHT + BALL_RADIUS) {
+
+      // hit Top of tile?
+
+      // hit Left of tile?
+
+      // hit Right of tile?
+
+
+      // hit bottom of tile?
+      if (x_current < gameTiles->tile[i].x_position + TILE_WIDTH &&
+          x_current > gameTiles->tile[i].x_position) {
+        angle = 2 * PI - angle;
+        gameTiles->tile[i].is_dead = true;
+        return;
+      }
+    }
+  }
+}
