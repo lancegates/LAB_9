@@ -188,17 +188,18 @@ void tryBounceOffPaddle() {
 void tryBounceOffTile() {
   // loop through all tiles
   for (uint16_t i = 0; i < TOTAL_NUM_TILES; i++) {
-    
+
     // check to see if ball has a chance of hitting the tile
     if (y_current <=
         gameTiles->tile[i].y_position + TILE_HIEGHT + BALL_RADIUS) {
 
       // hit Top of tile?
-
-      // hit Left of tile?
-
-      // hit Right of tile?
-
+      if (y_current >= gameTiles->tile[i].y_position - BALL_RADIUS) {
+        if (x_current < gameTiles->tile[i].x_position + TILE_WIDTH &&
+            x_current > gameTiles->tile[i].x_position) {
+          angle = 2 * PI - angle;
+        }
+      }
 
       // hit bottom of tile?
       if (x_current < gameTiles->tile[i].x_position + TILE_WIDTH &&
@@ -206,6 +207,10 @@ void tryBounceOffTile() {
         angle = 2 * PI - angle;
         gameTiles->tile[i].is_dead = true;
         return;
+
+        // hit Left of tile?
+
+        // hit Right of tile?
       }
     }
   }
