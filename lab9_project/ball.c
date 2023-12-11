@@ -205,6 +205,7 @@ void tryBounceOffTile() {
       if (x_current < gameTiles->tile[i].x_position + TILE_WIDTH &&
           x_current > gameTiles->tile[i].x_position) {
         angle = 2 * PI - angle;
+        eraseTile(gameTiles->tile[i]);
         gameTiles->tile[i].is_dead = true;
         return;
 
