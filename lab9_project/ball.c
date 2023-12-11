@@ -50,9 +50,9 @@ uint16_t padEdge;
 uint16_t tickCount;
 int16_t x_change;
 int16_t y_change;
-extern tile_t tile[];
 
-void ball_init() { currentState = init_st; }
+
+void ball_init(tile_t *tile) { currentState = init_st; }
 
 void ball_tick() {
   switch (currentState) {
@@ -147,11 +147,11 @@ void ball_tick() {
   }
 }
 
-bool ball_hit_ground() { 
+bool ball_hit_ground() {
   bool temp = dead;
   dead = false;
-  return temp; 
-  }
+  return temp;
+}
 
 void drawBall() {
   display_fillCircle(x_current, y_current, BALL_RADIUS, BALL_COLOR);
@@ -175,10 +175,7 @@ void tryBounceOffPaddle() {
   }
   // then check to see if ball hit side of paddle
   else if (y_current > paddleLocation.y) {
-
   }
 }
 
-void tryBounceOffTile(){
-
-}
+void tryBounceOffTile() {}
