@@ -176,7 +176,7 @@ void gameControl_tick() {
 
   case GAME_OVER:
     if (touchscreen_get_status() == TOUCHSCREEN_PRESSED) {
-      currentState = GAME_ON;
+      currentState = INIT;
     }
     break;
   }
