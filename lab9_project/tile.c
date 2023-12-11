@@ -82,4 +82,6 @@ void tile_init_blue(tile_t *tile, uint16_t x) {
 bool tile_is_dead(tile_t *tile) { return tile->is_dead; }
 
 // draw tile (3)
-void eraseTile(tile_t *tile) {}
+void eraseTile(tile_t *tile) {
+  display_fillRect(tile->x_position,tile->y_position, TILE_LENGTH - TILE_GAP, TILE_WIDTH, DISPLAY_BLACK);
+}

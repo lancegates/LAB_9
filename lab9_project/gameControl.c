@@ -24,8 +24,6 @@ static tile_t *red_tiles = &(gameTiles.tile[0]);
 static tile_t *green_tile = &(gameTiles.tile[TOTAL_NUM_TILES / 3]);
 static tile_t *blue_tile = &(gameTiles.tile[TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3)]);
 
-
-
 // Game states
 enum state_control_t { INIT, MENU, GAME_ON, GAME_OVER };
 // Variable for switching states

@@ -39,5 +39,7 @@ bool tile_is_dead(tile_t *tile);
 
 void tile_tick(tile_t *tile);
 
+void eraseTile(tile_t *tile);
+
 
 #endif /* TILE */
