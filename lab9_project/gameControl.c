@@ -4,12 +4,16 @@
 #include "ball.h"
 #include "paddle.h"
 #include "tile.h"
+#include "touchscreen.h"
 #include <stdio.h>
 
 #define BACKGROUND_COLOR DISPLAY_BLACK
-
-
 tile_t tile[TOTAL_NUM_TILES];
+
+//menu variables
+#define MENU_WAIT_TIME 5/45.0E-3
+uint32_t menuCount;
+
 uint8_t gameLives = 3;
 uint8_t previousGameLives;
 uint8_t gamePoints = 0;
@@ -23,6 +27,59 @@ tile_t *blue_tile = &(tile[TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3)]);
 enum state_control_t { INIT, MENU, GAME_ON, GAME_OVER };
 // Variable for switching states
 static enum state_control_t currentState;
+
+//fuction for updating the lives and score to current lives and score
+void updateLivesAndScore() {
+  
+    display_setTextColor(DISPLAY_BLACK);
+    display_setCursor(45, 230);
+    display_printlnDecimalInt(previousGameLives);
+    // update
+    display_setCursor(5, 230);
+    display_setTextColor(DISPLAY_WHITE);
+    display_println("Lives: ");
+    display_setCursor(45, 230);
+    display_printlnDecimalInt(gameLives);
+
+    // Update displayed Points
+    // erase
+    display_setTextColor(DISPLAY_BLACK);
+    display_setCursor(310, 230);
+    display_printlnDecimalInt(previousGamePoints);
+    // update
+    display_setCursor(270, 230);
+    display_setTextColor(DISPLAY_WHITE);
+    display_println("Points: ");
+    display_setCursor(315, 230);
+    display_printlnDecimalInt(gamePoints);
+}
+
+void drawMenu(bool erase) {
+  // display menu
+  if (erase) {
+    display_setTextSize(.5);
+    display_setTextColor(DISPLAY_BLACK);
+    display_setTextSize(2);
+    display_setCursor(30, 100);
+    display_println("this is the game");
+  }
+  // hide menu
+  else {
+    display_setTextSize(.5);
+    display_setTextColor(DISPLAY_WHITE);
+    display_setTextSize(2);
+    display_setCursor(30,100);
+    display_println("this is the game");
+  }
+}
+
+void drawReset() {
+  display_setTextSize(2);
+  display_setTextColor(DISPLAY_WHITE);
+  display_setTextSize(2);
+  display_setCursor(110,100);
+  display_println("Game Over\n  (Press screen to retry)");
+}
 
 // Initialize the game control logic
 // This function will initialize everything else
@@ -73,42 +130,54 @@ void gameControl_init() {
 
 // Tick the game control logic
 void gameControl_tick() {
-  ball_tick();
-  paddle_tick();
+  switch(currentState) {
+  case INIT:
+    display_fillScreen(BACKGROUND_COLOR);
+    drawMenu(0);
+    currentState = MENU;
+    break;
 
-  // Check lives
-  if (ball_hit_ground()) {
-    if (gameLives > 0) {
-      previousGameLives = gameLives;
-      gameLives--;
+  case MENU:
+    if (menuCount >= MENU_WAIT_TIME) {
+      currentState = GAME_ON;
+      menuCount = 0;
+      drawMenu(1);
+      gameControl_init();
     }
+    else {
+      menuCount++;
+    }
+    break;
+    
+  case GAME_ON:
+    if (gameLives != 0) {
+      ball_tick();
+      paddle_tick();
+
+      // Check lives
+      if (ball_hit_ground()) {
+        if (gameLives > 0) {
+          previousGameLives = gameLives;
+          gameLives--;
+        }
+      }
+
+      updateLivesAndScore();
+    }
+    else {
+      currentState = GAME_OVER;
+      gameLives = 3;
+      display_fillScreen(BACKGROUND_COLOR);
+      drawReset();
+    }
+    break;
+
+  case GAME_OVER:
+    if (touchscreen_get_status() == TOUCHSCREEN_PRESSED) {
+      currentState = GAME_ON;
+    }
+    break;
   }
 
-  // Update displayed Lives
-  // erase
-  display_setCursor(5, 230);
-  display_setTextColor(DISPLAY_BLACK);
-  display_println("Lives: ");
-  display_setCursor(45, 230);
-  display_printlnDecimalInt(previousGameLives);
-  // update
-  display_setCursor(5, 230);
-  display_setTextColor(DISPLAY_WHITE);
-  display_println("Lives: ");
-  display_setCursor(45, 230);
-  display_printlnDecimalInt(gameLives);
-
-  // Update displayed Points
-  // erase
-  display_setCursor(270, 230);
-  display_setTextColor(DISPLAY_BLACK);
-  display_println("Points: ");
-  display_setCursor(310, 230);
-  display_printlnDecimalInt(previousGamePoints);
-  // update
-  display_setCursor(270, 230);
-  display_setTextColor(DISPLAY_WHITE);
-  display_println("Points: ");
-  display_setCursor(315, 230);
-  display_printlnDecimalInt(gamePoints);
 }
+

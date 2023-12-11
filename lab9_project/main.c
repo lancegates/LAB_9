@@ -30,7 +30,7 @@ int main() {
   display_init();
   touchscreen_init(TOUCHSCREEN_TIMER_PERIOD);
   buttons_init();
-  gameControl_init();
+  //gameControl_init();
 
   // Initialize timer interrupts
   interrupts_init();
