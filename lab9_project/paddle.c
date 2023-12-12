@@ -8,7 +8,7 @@
 #define LEFT_EDGE 0
 
 //paddle speed
-#define PADDLE_SPEED 4
+#define PADDLE_SPEED 5
 
 //middle of screen
 #define START_LOCATION_X 160

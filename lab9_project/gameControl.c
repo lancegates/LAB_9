@@ -22,37 +22,39 @@ static uint32_t previousGamePoints;
 
 static tile_t *red_tiles = &(gameTiles.tile[0]);
 static tile_t *green_tile = &(gameTiles.tile[TOTAL_NUM_TILES / 3]);
-static tile_t *blue_tile = &(gameTiles.tile[TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3)]);
+static tile_t *blue_tile =
+    &(gameTiles.tile[TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3)]);
 
 // Game states
 enum state_control_t { INIT, MENU, GAME_ON, GAME_OVER };
 // Variable for switching states
 static enum state_control_t currentState;
 
-//fuction for updating the lives and score to current lives and score
+// fuction for updating the lives and score to current lives and score
 void updateLivesAndScore() {
-  
-    display_setTextColor(DISPLAY_BLACK);
-    display_setCursor(45, 230);
-    display_printlnDecimalInt(previousGameLives);
-    // update
-    display_setCursor(5, 230);
-    display_setTextColor(DISPLAY_WHITE);
-    display_println("Lives: ");
-    display_setCursor(45, 230);
-    display_printlnDecimalInt(gameLives);
 
-    // Update displayed Points
-    // erase
-    display_setTextColor(DISPLAY_BLACK);
-    display_setCursor(285, 230);
-    display_printlnDecimalInt(previousGamePoints*100);
-    // update
-    display_setCursor(240, 230);
-    display_setTextColor(DISPLAY_WHITE);
-    display_println("Points: ");
-    display_setCursor(285, 230);
-    display_printlnDecimalInt(gamePoints*100);
+    
+  display_setTextColor(DISPLAY_BLACK);
+  display_setCursor(45, 230);
+  display_printlnDecimalInt(previousGameLives);
+  // update
+  display_setCursor(5, 230);
+  display_setTextColor(DISPLAY_WHITE);
+  display_println("Lives: ");
+  display_setCursor(45, 230);
+  display_printlnDecimalInt(gameLives);
+
+  // Update displayed Points
+  // erase
+  display_setTextColor(DISPLAY_BLACK);
+  display_setCursor(285, 230);
+  display_printlnDecimalInt(previousGamePoints*100);
+  // update
+  display_setCursor(240, 230);
+  display_setTextColor(DISPLAY_WHITE);
+  display_println("Points: ");
+  display_setCursor(285, 230);
+  display_printlnDecimalInt(gamePoints*100);
 }
 
 void drawMenu(bool erase) {
@@ -120,7 +122,6 @@ void gameControl_init() {
   display_setCursor(285, 230);
   display_printlnDecimalInt(gamePoints*100);
 
-
   // init ball
   ball_init(&gameTiles);
   // init paddle
@@ -141,13 +142,14 @@ void gameControl_init() {
 
   // fill blue tile objects
   for (uint16_t i = 0; i < (TOTAL_NUM_TILES / 3); i++) {
-    tile_init_blue(&gameTiles.tile[i + (TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3))], i);
+    tile_init_blue(
+        &gameTiles.tile[i + (TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3))], i);
   }
 }
 
 // Tick the game control logic
 void gameControl_tick() {
-  switch(currentState) {
+  switch (currentState) {
   case INIT:
     display_fillScreen(BACKGROUND_COLOR);
     drawMenu(0);
@@ -160,16 +162,42 @@ void gameControl_tick() {
       menuCount = 0;
       drawMenu(1);
       gameControl_init();
-    }
-    else {
+    } else {
       menuCount++;
     }
     break;
-    
+
   case GAME_ON:
     if (gameLives != 0) {
       ball_tick();
       paddle_tick();
+
+      // did you win
+      for (uint8_t i = 0; i < TOTAL_NUM_TILES; i++) {
+        if (!gameTiles.tile[i].is_dead)
+          break;
+        if (i == (TOTAL_NUM_TILES - 1)) {
+          // you won!!
+          reset_ball();
+
+          // fill red tile objects
+          for (uint16_t i = 0; i < (TOTAL_NUM_TILES / 3); i++) {
+            tile_init_red(&gameTiles.tile[i], i);
+          }
+
+          // fill green tile objects
+          for (uint16_t i = 0; i < (TOTAL_NUM_TILES / 3); i++) {
+            tile_init_green(&gameTiles.tile[i + (TOTAL_NUM_TILES / 3)], i);
+          }
+
+          // fill blue tile objects
+          for (uint16_t i = 0; i < (TOTAL_NUM_TILES / 3); i++) {
+            tile_init_blue(
+                &gameTiles.tile[i + (TOTAL_NUM_TILES - (TOTAL_NUM_TILES / 3))],
+                i);
+          }
+        }
+      }
 
       // Check lives
       if (ball_hit_ground()) {
@@ -180,8 +208,7 @@ void gameControl_tick() {
       }
 
       updateLivesAndScore();
-    }
-    else {
+    } else {
       currentState = GAME_OVER;
       gameLives = 3;
       display_fillScreen(BACKGROUND_COLOR);
@@ -196,6 +223,4 @@ void gameControl_tick() {
     }
     break;
   }
-
 }
-
