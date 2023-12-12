@@ -9,15 +9,16 @@
 
 #define PI 3.14159265
 
-#define BALL_BASE_SPEED (75 * .045)
+#define BALL_BASE_SPEED 3
+#define BALL_SPEED_INCREASE_BY .125
 #define TICKS_TO_WAIT_ON_PADDLE 20
-#define PADDLE_LENGTH 50
 #define TICKS_TO_WAIT_WHILE_DEAD 10
 #define BALL_COLOR DISPLAY_WHITE
 #define BACKGROUND_COLOR DISPLAY_BLACK
-
-#define TILE_WIDTH 32
+#define TILE_WIDTH 29
 #define TILE_HIEGHT 15
+#define PADDLE_LENGTH 50
+#define PADDLE_HIEGHT 5
 
 void drawBall();
 void eraseBall();
@@ -55,7 +56,6 @@ int16_t x_change;
 int16_t y_change;
 
 gameTiles_t *gameTiles;
-
 void ball_init(gameTiles_t *initTile) {
   currentState = init_st;
   gameTiles = initTile;
@@ -119,25 +119,25 @@ void ball_tick() {
     }
 
     if (x_current < BALL_RADIUS) {
-      // hit the left
+      // hit the left wall
       x_current = BALL_RADIUS;
       angle = PI - angle;
     }
 
     if (x_current > DISPLAY_WIDTH - BALL_RADIUS) {
-      // hit the right
+      // hit the right wall
       x_current = DISPLAY_WIDTH - BALL_RADIUS;
       angle = PI - angle;
     }
+
+    tryBounceOffPaddle();
+    tryBounceOffTile();
 
     // check to keep angle between 0 and 2PI
     if (angle > 2 * PI)
       angle -= 2 * PI;
     else if (angle < 0)
       angle += 2 * PI;
-
-    tryBounceOffPaddle();
-    tryBounceOffTile();
 
     // redrawBall
     drawBall();
@@ -172,7 +172,8 @@ void tryBounceOffPaddle() {
   paddleLocation = paddle_getXY();
 
   // first chect to see if ball hit top of paddle
-  if (y_current >= paddleLocation.y - BALL_RADIUS) {
+  if (y_current >= paddleLocation.y - BALL_RADIUS &&
+      y_current <= paddleLocation.y + PADDLE_HIEGHT + BALL_RADIUS) {
     if (x_current < paddleLocation.x + PADDLE_LENGTH / 2 &&
         x_current > paddleLocation.x - PADDLE_LENGTH / 2) {
 
@@ -188,34 +189,48 @@ void tryBounceOffPaddle() {
 void tryBounceOffTile() {
   // loop through all tiles
   for (uint16_t i = 0; i < TOTAL_NUM_TILES; i++) {
-    
+
     if (gameTiles->tile[i].is_dead) {
       continue;
     }
 
     // check to see if ball has a chance of hitting the tile
     if (y_current <=
-        gameTiles->tile[i].y_position + TILE_HIEGHT + BALL_RADIUS) {
+            gameTiles->tile[i].y_position + TILE_HIEGHT + BALL_RADIUS &&
+        y_current >= gameTiles->tile[i].y_position - BALL_RADIUS) {
 
-      // hit Top of tile?
-      // if (y_current >= gameTiles->tile[i].y_position - BALL_RADIUS) {
-      //   if (x_current < gameTiles->tile[i].x_position + TILE_WIDTH &&
-      //       x_current > gameTiles->tile[i].x_position) {
-      //     angle = 2 * PI - angle;
-      //   }
-      // }
-
-      // hit bottom of tile?
-      if (x_current < gameTiles->tile[i].x_position + TILE_WIDTH &&
-          x_current > gameTiles->tile[i].x_position) {
+      // hit bottom or top of tile?
+      if (x_current <= gameTiles->tile[i].x_position + TILE_WIDTH &&
+          x_current >= gameTiles->tile[i].x_position) {
         angle = 2 * PI - angle;
-        eraseTile(&(gameTiles->tile[i]));
+        speed += BALL_SPEED_INCREASE_BY;
         gameTiles->tile[i].is_dead = true;
+        scoreTile(&(gameTiles->tile[i]));
+        eraseTile(&(gameTiles->tile[i]));
         return;
+      }
 
-        // hit Left of tile?
+      // hit Left of tile?
+      if (x_current <=
+              gameTiles->tile[i].x_position + TILE_WIDTH + BALL_RADIUS &&
+          x_current >= gameTiles->tile[i].x_position + TILE_WIDTH) {
+        angle = PI - angle;
+        speed += BALL_SPEED_INCREASE_BY;
+        gameTiles->tile[i].is_dead = true;
+        scoreTile(&(gameTiles->tile[i]));
+        eraseTile(&(gameTiles->tile[i]));
+        return;
+      }
 
-        // hit Right of tile?
+      // hit Right of tile?
+      if (x_current <= gameTiles->tile[i].x_position &&
+          x_current >= gameTiles->tile[i].x_position - BALL_RADIUS) {
+        angle = PI - angle;
+        speed += BALL_SPEED_INCREASE_BY;
+        gameTiles->tile[i].is_dead = true;
+        scoreTile(&(gameTiles->tile[i]));
+        eraseTile(&(gameTiles->tile[i]));
+        return;
       }
     }
   }
