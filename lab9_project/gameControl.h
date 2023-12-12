@@ -16,4 +16,7 @@ void gameControl_init();
 // Tick the game control logic
 void gameControl_tick();
 
+// edit the score
+void scoreTile(tile_t *tile);
+
 #endif /* GAMECONTROL */

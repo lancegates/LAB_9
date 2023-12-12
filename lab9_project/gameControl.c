@@ -45,13 +45,13 @@ void updateLivesAndScore() {
     // Update displayed Points
     // erase
     display_setTextColor(DISPLAY_BLACK);
-    display_setCursor(310, 230);
+    display_setCursor(285, 230);
     display_printlnDecimalInt(previousGamePoints);
     // update
-    display_setCursor(270, 230);
+    display_setCursor(240, 230);
     display_setTextColor(DISPLAY_WHITE);
     display_println("Points: ");
-    display_setCursor(315, 230);
+    display_setCursor(285, 230);
     display_printlnDecimalInt(gamePoints);
 }
 
@@ -79,7 +79,21 @@ void drawReset() {
   display_setTextColor(DISPLAY_WHITE);
   display_setTextSize(2);
   display_setCursor(110,100);
-  display_println("Game Over\n  (Press screen to retry)");
+  display_println("Game Over\n  (Press screen to retry)\n     Score: ");
+  display_setCursor(210,100);
+  display_printlnDecimalInt(gamePoints);
+}
+
+void scoreTile(tile_t *tile) {
+  if (tile->type == TILE_TYPE_RED) {
+    gamePoints = gamePoints + 300;
+  }
+  else if (tile->type == TILE_TYPE_GREEN) {
+    gamePoints = gamePoints + 200;
+  }
+  else if (tile->type == TILE_TYPE_BLUE) {
+    gamePoints = gamePoints + 100;
+  }
 }
 
 // Initialize the game control logic
@@ -99,10 +113,10 @@ void gameControl_init() {
 
   // init points in bottom right corner
   display_setTextSize(.5);
-  display_setCursor(270, 230);
+  display_setCursor(240, 230);
   display_setTextColor(DISPLAY_WHITE);
   display_println("Points: ");
-  display_setCursor(315, 230);
+  display_setCursor(285, 230);
   display_printlnDecimalInt(gamePoints);
 
 
@@ -169,6 +183,7 @@ void gameControl_tick() {
     else {
       currentState = GAME_OVER;
       gameLives = 3;
+      gamePoints = 0;
       display_fillScreen(BACKGROUND_COLOR);
       drawReset();
     }
