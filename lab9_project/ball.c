@@ -218,7 +218,8 @@ void tryBounceOffTile() {
       // hit Right of tile?
       if (x_current <=
               gameTiles->tile[i].x_position + TILE_WIDTH + BALL_RADIUS &&
-          x_current >= gameTiles->tile[i].x_position + TILE_WIDTH) {
+          x_current >=
+              gameTiles->tile[i].x_position + TILE_WIDTH - BALL_RADIUS) {
         angle = PI - angle;
         speed += BALL_SPEED_INCREASE_BY;
         gameTiles->tile[i].is_dead = true;
@@ -228,7 +229,7 @@ void tryBounceOffTile() {
       }
 
       // hit Left of tile?
-      if (x_current <= gameTiles->tile[i].x_position &&
+      if (x_current <= gameTiles->tile[i].x_position + BALL_RADIUS &&
           x_current >= gameTiles->tile[i].x_position - BALL_RADIUS) {
         angle = PI - angle;
         speed += BALL_SPEED_INCREASE_BY;
