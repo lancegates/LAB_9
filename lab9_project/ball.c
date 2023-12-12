@@ -156,6 +156,7 @@ void ball_tick() {
 
 void reset_ball() {
   eraseBall();
+  y_current = paddleLocation.y - BALL_RADIUS;
   currentState = on_paddle_st;
 }
 
