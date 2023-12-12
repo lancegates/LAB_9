@@ -9,6 +9,8 @@
 
 void ball_init();
 
+void reset_ball();
+
 void ball_tick();
 
 bool ball_hit_ground();

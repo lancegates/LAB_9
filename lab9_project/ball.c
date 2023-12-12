@@ -154,6 +154,11 @@ void ball_tick() {
   }
 }
 
+void reset_ball() {
+  eraseBall();
+  currentState = on_paddle_st;
+}
+
 bool ball_hit_ground() {
   bool temp = dead;
   dead = false;
@@ -210,7 +215,7 @@ void tryBounceOffTile() {
         return;
       }
 
-      // hit Left of tile?
+      // hit Right of tile?
       if (x_current <=
               gameTiles->tile[i].x_position + TILE_WIDTH + BALL_RADIUS &&
           x_current >= gameTiles->tile[i].x_position + TILE_WIDTH) {
@@ -222,7 +227,7 @@ void tryBounceOffTile() {
         return;
       }
 
-      // hit Right of tile?
+      // hit Left of tile?
       if (x_current <= gameTiles->tile[i].x_position &&
           x_current >= gameTiles->tile[i].x_position - BALL_RADIUS) {
         angle = PI - angle;
