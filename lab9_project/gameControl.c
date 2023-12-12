@@ -10,15 +10,15 @@
 #define BACKGROUND_COLOR DISPLAY_BLACK
 
 //menu variables
-#define MENU_WAIT_TIME 5/45.0E-3
+#define MENU_WAIT_TIME 3/45.0E-3
 static uint32_t menuCount;
 
 static gameTiles_t gameTiles;
 
 static uint8_t gameLives = 3;
 static uint8_t previousGameLives;
-static uint8_t gamePoints = 0;
-static uint8_t previousGamePoints;
+static uint32_t gamePoints = 0;
+static uint32_t previousGamePoints;
 
 static tile_t *red_tiles = &(gameTiles.tile[0]);
 static tile_t *green_tile = &(gameTiles.tile[TOTAL_NUM_TILES / 3]);
@@ -46,31 +46,31 @@ void updateLivesAndScore() {
     // erase
     display_setTextColor(DISPLAY_BLACK);
     display_setCursor(285, 230);
-    display_printlnDecimalInt(previousGamePoints);
+    display_printlnDecimalInt(previousGamePoints*100);
     // update
     display_setCursor(240, 230);
     display_setTextColor(DISPLAY_WHITE);
     display_println("Points: ");
     display_setCursor(285, 230);
-    display_printlnDecimalInt(gamePoints);
+    display_printlnDecimalInt(gamePoints*100);
 }
 
 void drawMenu(bool erase) {
   // display menu
   if (erase) {
-    display_setTextSize(.5);
+    
     display_setTextColor(DISPLAY_BLACK);
-    display_setTextSize(2);
+    display_setTextSize(5);
     display_setCursor(30, 100);
-    display_println("this is the game");
+    display_println("BREAK-OUT");
   }
   // hide menu
   else {
-    display_setTextSize(.5);
+    
     display_setTextColor(DISPLAY_WHITE);
-    display_setTextSize(2);
+    display_setTextSize(5);
     display_setCursor(30,100);
-    display_println("this is the game");
+    display_println("BREAK-OUT");
   }
 }
 
@@ -79,20 +79,21 @@ void drawReset() {
   display_setTextColor(DISPLAY_WHITE);
   display_setTextSize(2);
   display_setCursor(110,100);
-  display_println("Game Over\n  (Press screen to retry)\n     Score: ");
-  display_setCursor(210,100);
-  display_printlnDecimalInt(gamePoints);
+  display_println("Game Over\n  (Press screen to retry)\n         Score: ");
+  display_setCursor(185,132);
+  display_printlnDecimalInt(gamePoints*100);
 }
 
 void scoreTile(tile_t *tile) {
+  previousGamePoints = gamePoints;
   if (tile->type == TILE_TYPE_RED) {
-    gamePoints = gamePoints + 300;
+    gamePoints = gamePoints + 3;
   }
   else if (tile->type == TILE_TYPE_GREEN) {
-    gamePoints = gamePoints + 200;
+    gamePoints = gamePoints + 2;
   }
   else if (tile->type == TILE_TYPE_BLUE) {
-    gamePoints = gamePoints + 100;
+    gamePoints = gamePoints + 1;
   }
 }
 
@@ -117,7 +118,7 @@ void gameControl_init() {
   display_setTextColor(DISPLAY_WHITE);
   display_println("Points: ");
   display_setCursor(285, 230);
-  display_printlnDecimalInt(gamePoints);
+  display_printlnDecimalInt(gamePoints*100);
 
 
   // init ball
@@ -183,9 +184,9 @@ void gameControl_tick() {
     else {
       currentState = GAME_OVER;
       gameLives = 3;
-      gamePoints = 0;
       display_fillScreen(BACKGROUND_COLOR);
       drawReset();
+      gamePoints = 0;
     }
     break;
 
